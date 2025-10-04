@@ -8,7 +8,7 @@
 */
 
 html, body, div, span, applet, object,
-iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+iframe, h1, h2, h3, h4, h5, h6, p, blockquote,	
 pre, a, abbr, acronym, address, big, cite,
 code, del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var, b,
@@ -3285,7 +3285,7 @@ input, select, textarea {
 
 	#intro {
 		color: #ffffff;
-		padding: 8rem 2rem 6rem 2rem ;
+		padding: 8rem 4rem 6rem 4rem ;
 		-moz-align-items: center;
 		-webkit-align-items: center;
 		-ms-align-items: center;
@@ -3390,31 +3390,6 @@ input, select, textarea {
 			line-height: 1;
 		}
 
-		@media screen and (max-width: 736px) {
-			#intro {
-				padding: 4rem 2rem 2rem 2rem;
-			}
-
-			#intro h1 {
-				font-size: 3rem;
-			}
-
-			#intro p {
-				font-size: 1rem;
-			}
-
-			#intro .actions {
-				width: 100%;
-				margin: 2rem 0;
-			}
-
-			#intro .button {
-				width: 100%;
-				padding: 0.75rem;
-				margin: 0.5rem 0;
-			}
-		}
-
 		#intro p {
 			font-size: 1.25rem;
 			font-style: italic;
@@ -3510,7 +3485,89 @@ input, select, textarea {
 				}
 
 				#intro .actions {
-					display: none;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					margin-top: 0.2rem;
+					gap: 1.2rem;
+				}
+
+				#intro .actions li {
+					width: 100%;
+					max-width: 320px;
+				}
+
+				#intro .actions .button {
+					width: 100%;
+					font-size: 1rem;
+					padding: 1.25rem 2.5rem;
+					height: auto;
+					line-height: 1.4;
+					border-radius: 4px;
+					box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+					transition: all 0.3s ease;
+					font-weight: 700;
+				}
+
+				#intro .actions .button:hover {
+					transform: translateY(-2px);
+					box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+				}
+
+				#intro .actions .button.primary {
+					background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+					color: #1e252d !important;
+					border: 2px solid #ffffff;
+				}
+
+				#intro .actions .button.primary:hover {
+					background: linear-gradient(135deg, #18bfef 0%, #0ea5e9 100%);
+					color: #ffffff !important;
+					border-color: #18bfef;
+				}
+
+				/* Special styling for solo buttons (icon-only buttons) */
+				#intro .actions .button.solo {
+					position: relative;
+					width: 3.5rem;
+					height: 3.5rem;
+					padding: 0;
+					border-radius: 50%;
+					font-size: 1rem;
+					line-height: 3.5rem;
+					text-indent: 3.5rem;
+					overflow: hidden;
+					white-space: nowrap;
+					background-color: transparent;
+					box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+					color: #ffffff !important;
+					margin: 0 auto;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				#intro .actions .button.solo:hover {
+					box-shadow: inset 0 0 0 2px #18bfef;
+					color: #18bfef !important;
+					transform: translateY(-2px);
+				}
+
+				#intro .actions .button.solo:before {
+					position: absolute;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					width: auto;
+					height: auto;
+					font-size: 1.2rem;
+					margin: 0;
+					text-align: center;
+					text-indent: 0;
+					line-height: 1;
 				}
 
 		}
@@ -4568,7 +4625,7 @@ input, select, textarea {
 		@media screen and (max-width: 980px) {
 
 			#navPanelToggle {
-				display: block;
+				display: none;
 			}
 
 		}
@@ -4689,7 +4746,7 @@ input, select, textarea {
 		@media screen and (max-width: 980px) {
 
 			#navPanel {
-				display: block;
+				display: none;
 			}
 
 		}
