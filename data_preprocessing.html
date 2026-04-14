@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<link rel="icon" href="images/lugia_sprite.jpg">
+		<title>Data Preprocessing</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/lightbox.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<br></br>
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li class="active"><a href="index.html">← Project Display</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/manthan-waghela-3316ba328/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/myself-moons" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+						<section class="post">
+							<header class="major">
+								<h1>Credit Risk Data Preprocessing & Imputation Pipeline</h1>
+								<p>A structured preprocessing pipeline for a customer credit dataset, designed to resolve missing values, normalize categorical fields, and produce a clean dataset ready for analytics and machine learning.</p>
+							</header>
+
+							<section>
+								<h2>Introduction</h2>
+								<p>This project uses a credit risk dataset containing customer profiles and financial information such as <strong>Income</strong>, <strong>Credit_Score</strong>, <strong>Credit_Utilization</strong>, <strong>Loan_Balance</strong>, <strong>Employment_Status</strong>, and monthly payment indicators. The raw data had several quality issues that needed resolution before modeling</p>
+								<p>Key problems identified:</p>
+								<ul>
+									<li>Missing values in <strong>Income</strong>, <strong>Credit_Score</strong>, and <strong>Loan_Balance</strong></li>
+									<li>Inconsistent categories in <strong>Employment_Status</strong></li>
+									<li>Potential outliers in <strong>Credit_Utilization</strong></li>
+									<li>Raw dataset not ready for analytics, reporting, or ML</li>
+								</ul>
+								<p>The pipeline addresses these issues through inspection, standardization, imputation, and export of a final dataset that is complete, normalized, and analysis-ready.</p>
+							</section>
+
+							<section>
+								<h2>Before vs After Imputation</h2>
+							<div class="row gtr-uniform">
+								<div class="col-6">
+									<a href="images/Data_Transformation/Before_Impute.png" class="image fit lightbox-image">
+										<img src="images/Data_Transformation/Before_Impute.png" alt="Missing values before preprocessing" style="max-height: 260px; width: auto; margin: 0 auto;" />
+									</a>
+									<p><strong>Before:</strong> missing values by column.</p>
+								</div>
+								<div class="col-6">
+									<a href="images/Data_Transformation/After_Impute.png" class="image fit lightbox-image">
+										<img src="images/Data_Transformation/After_Impute.png" alt="Data after preprocessing" style="max-height: 260px; width: auto; margin: 0 auto;" />
+									</a>
+									<p><strong>After:</strong> Imputed dataset with no missing values.</p>
+								</div>
+							</div>
+							</section>
+                            <br><br>
+
+							<section id="pipeline">
+								<h2>Pipeline Overview</h2>
+								<p>Below is a clickable sequence of preprocessing stages. Each stage includes a short description, the reason it was important, and the result generated.</p>
+							</section>
+
+							<section id="inspection">
+								<details open>
+									<summary><strong>Data Inspection</strong></summary>
+									<p>Identifying data quality issues early prevents bad imputation choices and downstream surprises.</p>
+									<pre><code>print(df.isnull().sum())
+#Check unique values in Employment_Status
+print(df['Employment_Status'].value_counts())</code></pre>
+									<p>Result: clear visibility into the columns that required standardization and imputation.</p>
+								</details>
+							</section>
+
+							<section id="standardization">
+								<details>
+									<summary><strong>Data Standardization</strong></summary>
+									<p>Employment status values were normalized by lowercasing and mapping variations to consistent labels.</p>
+									<p>Inconsistent categories can cause incorrect grouping and poor feature interpretation.</p>
+									<pre><code>df['Employment_Status'] = df['Employment_Status'].str.lower().str.strip()
+employment_map = {'emp':'employed','self-employed':'self-employed','unemployed':'unemployed','employed':'employed','retired':'retired'}
+df['Employment_Status'] = df['Employment_Status'].map(employment_map).fillna(df['Employment_Status'])</code></pre>
+									<p>Result: standardized categorical values that are ready for feature encoding.</p>
+								</details>
+							</section>
+
+							<section id="imputation">
+								<details>
+									<summary><strong>Missing Value Imputation</strong></summary>
+									<p>Different imputation strategies were used depending on the column: median for Credit_Score, group median for Loan_Balance, and predictive MICE for Income.</p>
+									<p>Each variable had a different distribution and missingness pattern, so a tailored approach preserves data integrity.</p>
+									<pre><code>median_cs = df['Credit_Score'].median()
+df['Credit_Score'] = df['Credit_Score'].fillna(median_cs)
+median_loan_by_type = df.groupby('Credit_Card_Type')['Loan_Balance'].transform('median')
+df['Loan_Balance'] = df['Loan_Balance'].fillna(median_loan_by_type)
+# For MICE imputation of Income
+imputer = IterativeImputer(estimator=RandomForestRegressor(),
+                        max_iter=10,
+                        random_state=42,
+                        initial_strategy='median')</code></pre>
+									<p>Result: missing values were filled, improving dataset completeness without introducing obvious bias.</p>
+								</details>
+							</section>
+
+							<section id="feature">
+								<details>
+									<summary><strong>Feature Engineering</strong></summary>
+									<p>We also capped Credit_Utilization at 1.0 and encoded categorical fields for use with the final imputer.</p>
+									<p>Controlled feature ranges and consistent encoding improve model stability and interpretation.</p>
+									<pre><code>df['Credit_Utilization'] = df['Credit_Utilization'].clip(upper=1.0)
+df_for_impute = pd.get_dummies(df_for_impute, columns=cat_cols, drop_first=True)</code></pre>
+									<p>Result: features were normalized and prepared for analytics-ready export.</p>
+								</details>
+							</section>
+
+							<section id="output">
+								<details>
+									<summary><strong>Final Output</strong></summary>
+									<p>The final transformed dataset is exported as <a href="images/Data_Transformation/transformed_dataset.xlsx"><code>transformed_dataset.xlsx</code></a>, providing a clean input for dashboards, reports, and machine learning models.</p>
+									<p>The dataset is now ready for analytics, predictive modeling, and production-ready reporting.</p>
+									<pre><code>df.to_excel("transformed_dataset.xlsx")</code></pre>
+								</details>
+							</section>
+						</section>
+					</div>
+
+				<!-- Footer
+					<footer id="footer">
+						<section>
+							<form method="post" action="#">
+								<div class="fields">
+									<div class="field">
+										<h3>Send me a message!</h3>
+										<label for="name">Name</label>
+										<input type="text" name="name" id="name" />
+									</div>
+									<div class="field">
+										<label for="email">Email</label>
+										<input type="text" name="email" id="email" />
+									</div>
+									<div class="field">
+										<label for="message">Message</label>
+										<textarea name="message" id="message" rows="3"></textarea>
+									</div>
+								</div>
+								<ul class="actions">
+									<li><input type="submit" value="Send Message" /></li>
+								</ul>
+							</form>
+						</section>
+						<section class="split contact">
+							<section class="alt">
+								<h3>Address</h3>
+								<p>KD Heights Blg no. 4, 18th Floor, Opposite Laxminarayan Temple, Rani Sati Marg, Malad(E), Mumbai - 97, Maharashtra, India</p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p><a href="#">+91 9372752195</a></p>
+							</section>
+							<section>
+								<h3>Email</h3>
+								<p><a href="#">manthan.waghela@gmail.com</a></p>
+							</section>
+							<section>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="https://www.linkedin.com/in/manthan-waghela-3316ba328/" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+									<li><a href="https://discord.com/users/856909072280715264" class="icon brands alt fa-discord"><span class="label">Discord</span></a></li>
+									<li><a href="https://github.com/myself-moons" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer> -->
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>Manthan Waghela</li><li>Design Made using: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="assets/js/lightbox.js"></script>
+
+	</body>
+</html>
