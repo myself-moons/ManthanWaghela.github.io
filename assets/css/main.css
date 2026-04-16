@@ -2620,8 +2620,9 @@ input, select, textarea {
 
 		.image.fit {
 			display: block;
-			margin: 2.5rem 0;
+			margin: 2.5rem auto;
 			width: 100%;
+			max-width: 760px;
 		}
 
 			.image.fit:first-child {
@@ -2630,12 +2631,17 @@ input, select, textarea {
 
 			.image.fit img {
 				width: 100%;
+				height: 260px;
+				object-fit: contain;
+				background-color: #ffffff;
+				display: block;
 			}
 
 		.image.main {
 			display: block;
-			margin: 4rem 0;
+			margin: 2rem auto;
 			width: 100%;
+			max-width: 760px;
 		}
 
 			.image.main:first-child {
@@ -2644,6 +2650,10 @@ input, select, textarea {
 
 			.image.main img {
 				width: 100%;
+				height: 260px;
+				object-fit: contain;
+				background-color: #ffffff;
+				display: block;
 			}
 
 		@media screen and (max-width: 736px) {
